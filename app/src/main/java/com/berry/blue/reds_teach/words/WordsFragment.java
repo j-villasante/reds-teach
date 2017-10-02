@@ -48,6 +48,11 @@ public class WordsFragment extends Fragment implements WordsI.Fragment{
     }
 
     @Override
+    public void onDeleteItemClick(Word word) {
+        view.showDialog(WordsDialog.newInstance(WordsDialog.TYPE.DELETE_WORD, word));
+    }
+
+    @Override
     public void showMessage(String errorMessage) {
         this.view.showMessage(errorMessage);
     }

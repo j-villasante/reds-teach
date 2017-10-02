@@ -20,6 +20,7 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.ViewHolder>{
         @BindView(R.id.info_text) TextView tviName;
         @BindView(R.id.words_nfc_but) ImageView nfcBut;
         @BindView(R.id.words_edit_but) ImageView editBut;
+        @BindView(R.id.words_delete_but) ImageView deleteBut;
         ViewHolder(View view){
             super(view);
             ButterKnife.bind(this, view);
@@ -43,7 +44,8 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.ViewHolder>{
     public void onBindViewHolder(ViewHolder holder, int position) {
         Word word = words.get(position);
         holder.tviName.setText(word.name);
-        holder.editBut.setOnClickListener((view) -> fragment.onEditItemClick(word));
+        holder.editBut.setOnClickListener(view -> fragment.onEditItemClick(word));
+        holder.deleteBut.setOnClickListener(view -> fragment.onDeleteItemClick(word));
     }
 
     @Override

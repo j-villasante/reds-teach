@@ -16,24 +16,36 @@ import com.berry.blue.reds_teach.words.WordsControl;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class WordsDialog extends DialogFragment{
+public abstract class WordsDialog extends DialogFragment{
     @BindView(R.id.new_word_edit_text) EditText editText;
 
     public enum TYPE {
-        ADD_WORD, MODIFY_WORD
+        ADD_WORD, MODIFY_WORD, DELETE_WORD
     }
 
-    private TYPE currentType;
-    private Word word;
-    private WordsControl wordsControl;
+    protected Word word;
+    protected WordsControl wordsControl;
 
     public static WordsDialog newInstance() {
-        return new WordsDialog();
+        return new AddWordDialog();
     }
 
     public static WordsDialog newInstance(TYPE type, Word word) {
-        WordsDialog dialog = new WordsDialog();
-        dialog.initialize(type, word);
+        WordsDialog dialog;
+        switch (type) {
+            case MODIFY_WORD:
+                dialog = new ModifyWordDialog();
+                break;
+            case ADD_WORD:
+                dialog = new AddWordDialog();
+                break;
+            case DELETE_WORD:
+                dialog = new DeleteWordDialog();
+                break;
+            default:
+                dialog = new AddWordDialog();
+        }
+        dialog.initialize(word);
         return dialog;
     }
 
@@ -44,42 +56,25 @@ public class WordsDialog extends DialogFragment{
         View view = activity.getLayoutInflater().inflate(R.layout.new_word_dialog, null);
         ButterKnife.bind(this, view);
 
-        if (word != null) editText.setText(word.name);
+        if (word != null) setEditTextContent();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setView(view)
-                .setPositiveButton(getConfirmText(), (dialog, which) -> this.handlePositiveDialogClicks())
+                .setPositiveButton(getConfirmButtonText(), (dialog, which) -> this.handlePositiveDialogClicks())
                 .setNegativeButton("Cancelar", null);
         return builder.create();
     }
 
-    public void handlePositiveDialogClicks() {
-        switch (currentType) {
-            case ADD_WORD:
-                wordsControl.addWord(editText.getText().toString());
-                break;
-            case MODIFY_WORD:
-                if (word != null) wordsControl.modifyWord(editText.getText().toString(), word.key);
-                break;
-            default:
-                wordsControl.addWord(editText.getText().toString());
-        }
-    }
-
-    private void initialize(TYPE type, Word word) {
-        this.currentType = type;
+    private void initialize(Word word) {
         this.word = word;
         this.wordsControl = WordsControl.instance();
     }
 
-    private String getConfirmText(){
-        switch (currentType) {
-            case ADD_WORD:
-                return "Agregar";
-            case MODIFY_WORD:
-                return "Modificar";
-            default:
-                return "Agregar";
-        }
+    protected void setEditTextContent() {
+        editText.setText("");
     }
+
+    abstract void handlePositiveDialogClicks();
+
+    abstract String getConfirmButtonText();
 }

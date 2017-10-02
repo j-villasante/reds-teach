@@ -8,6 +8,7 @@ public interface WordsI {
     interface Fragment {
         void onDataObtained(List<Word> words);
         void onEditItemClick(Word word);
+        void onDeleteItemClick(Word word);
         void showMessage(String errorMessage);
     }
 }
