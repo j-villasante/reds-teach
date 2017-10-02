@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import com.berry.blue.reds_teach.R;
 import com.berry.blue.reds_teach.fires.Word;
 import com.berry.blue.reds_teach.interfaces.activities.Main;
+import com.berry.blue.reds_teach.nfcUtils.TagControl;
+import com.berry.blue.reds_teach.words.dialog.NfcDialog;
 import com.berry.blue.reds_teach.words.dialog.WordsDialog;
 
 import java.util.List;
@@ -50,6 +52,12 @@ public class WordsFragment extends Fragment implements WordsI.Fragment{
     @Override
     public void onDeleteItemClick(Word word) {
         view.showDialog(WordsDialog.newInstance(WordsDialog.TYPE.DELETE_WORD, word));
+    }
+
+    @Override
+    public void onNfcItemClick(String key) {
+        TagControl.instance().setKey(key);
+        view.showDialog(new NfcDialog().setParent(view));
     }
 
     @Override

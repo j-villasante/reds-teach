@@ -1,12 +1,20 @@
 package com.berry.blue.reds_teach;
 
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.nfc.NfcAdapter;
+import android.nfc.tech.MifareUltralight;
+import android.nfc.tech.NfcA;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -33,6 +41,14 @@ public class MainActivity extends AppCompatActivity implements Main{
     private ActionBarDrawerToggle toggle;
     private FragmentManager fragmentManager;
 
+    // NFC variables
+    private NfcAdapter mNfcAdapter;
+    private PendingIntent mPendingIntent;
+    private IntentFilter[] mFilters;
+    private String[][] mTechLists;
+
+    private String TAG = getClass().getSimpleName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,12 +69,19 @@ public class MainActivity extends AppCompatActivity implements Main{
         WordsFragment fragment = new WordsFragment().setView(this);
         transaction.add(R.id.fragment_container, fragment);
         transaction.commit();
+
+        nfcInit();
     }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         toggle.syncState();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        Log.i(TAG, "Discovered nfc");
     }
 
     @Override
@@ -71,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements Main{
     }
 
     @Override
-    public void showDialog(WordsDialog dialog) {
+    public void showDialog(DialogFragment dialog) {
         dialog.show(fragmentManager, "NewWordDialog");
     }
 
@@ -80,7 +103,33 @@ public class MainActivity extends AppCompatActivity implements Main{
         Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG).show();
     }
 
+    @Override
+    public void onDismissNfcDialog() {
+        if (mNfcAdapter != null) mNfcAdapter.disableForegroundDispatch(this);
+    }
+
+    @Override
+    public void onOpenNfcDialog() {
+        if (mNfcAdapter != null) mNfcAdapter.enableForegroundDispatch(this, mPendingIntent, mFilters, mTechLists);
+        Log.i(TAG, "NFC read enabled");
+    }
+
     public boolean onNavigationItemSelected(MenuItem item) {
         return true;
+    }
+
+    private void nfcInit() {
+        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        if (mNfcAdapter != null) {
+            mPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+            IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
+            try {
+                ndef.addDataType("*/*");
+            } catch (IntentFilter.MalformedMimeTypeException e) {
+                throw new RuntimeException("fail", e);
+            }
+            mFilters = new IntentFilter[] {ndef, };
+            mTechLists = new String[][] { new String[] { MifareUltralight.class.getName() } };
+        }
     }
 }

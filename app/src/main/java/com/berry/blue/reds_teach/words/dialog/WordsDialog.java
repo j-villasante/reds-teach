@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.berry.blue.reds_teach.R;
 import com.berry.blue.reds_teach.fires.Word;
@@ -27,7 +28,9 @@ public abstract class WordsDialog extends DialogFragment{
     protected WordsControl wordsControl;
 
     public static WordsDialog newInstance() {
-        return new AddWordDialog();
+        WordsDialog dialog = new AddWordDialog();
+        dialog.initialize(null);
+        return dialog;
     }
 
     public static WordsDialog newInstance(TYPE type, Word word) {
@@ -53,13 +56,14 @@ public abstract class WordsDialog extends DialogFragment{
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         FragmentActivity activity = getActivity();
-        View view = activity.getLayoutInflater().inflate(R.layout.new_word_dialog, null);
+        View view = activity.getLayoutInflater().inflate(R.layout.word_dialog, null);
         ButterKnife.bind(this, view);
 
-        if (word != null) setEditTextContent();
+        if (word != null) onSetViewContents();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setView(view)
+                .setTitle(getTitle())
                 .setPositiveButton(getConfirmButtonText(), (dialog, which) -> this.handlePositiveDialogClicks())
                 .setNegativeButton("Cancelar", null);
         return builder.create();
@@ -70,9 +74,11 @@ public abstract class WordsDialog extends DialogFragment{
         this.wordsControl = WordsControl.instance();
     }
 
-    protected void setEditTextContent() {
+    protected void onSetViewContents() {
         editText.setText("");
     }
+
+    abstract String getTitle();
 
     abstract void handlePositiveDialogClicks();
 

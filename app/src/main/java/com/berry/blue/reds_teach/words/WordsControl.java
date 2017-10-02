@@ -56,18 +56,25 @@ public class WordsControl {
         });
     }
 
-    public void addWord(String word) {
+    public void add(String word) {
         this.reference
                 .push()
                 .setValue(new Word(word))
                 .addOnCompleteListener(task -> view.showMessage("La palabra se agregó correctamente."));
     }
 
-    public void modifyWord(String word, String key) {
+    public void modify(String word, String key) {
         this.reference
                 .child(key)
                 .child("name")
                 .setValue(word)
                 .addOnCompleteListener(task -> view.showMessage("La palabra se modificó correctamente."));
+    }
+
+    public void remove(String key) {
+        this.reference
+                .child(key)
+                .removeValue()
+                .addOnCompleteListener(task -> view.showMessage("La palabra se eliminó correctamente."));
     }
 }

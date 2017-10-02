@@ -46,6 +46,7 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.ViewHolder>{
         holder.tviName.setText(word.name);
         holder.editBut.setOnClickListener(view -> fragment.onEditItemClick(word));
         holder.deleteBut.setOnClickListener(view -> fragment.onDeleteItemClick(word));
+        holder.nfcBut.setOnClickListener(view -> fragment.onNfcItemClick(word.key));
     }
 
     @Override

@@ -9,6 +9,7 @@ public interface WordsI {
         void onDataObtained(List<Word> words);
         void onEditItemClick(Word word);
         void onDeleteItemClick(Word word);
+        void onNfcItemClick(String key);
         void showMessage(String errorMessage);
     }
 }

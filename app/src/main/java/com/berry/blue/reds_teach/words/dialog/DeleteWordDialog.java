@@ -1,15 +1,21 @@
 package com.berry.blue.reds_teach.words.dialog;
 
+
 public class DeleteWordDialog extends WordsDialog  {
     @Override
     void handlePositiveDialogClicks() {
-        if (word != null) wordsControl.modifyWord(editText.getText().toString(), word.key);
+        if (word != null) wordsControl.remove(word.key);
     }
 
     @Override
-    protected void setEditTextContent() {
+    protected void onSetViewContents() {
         editText.setText(word.name);
-        editText.setEnabled(false);
+        editText.setFocusable(false);
+    }
+
+    @Override
+    String getTitle() {
+        return "Eliminar palabra";
     }
 
     @Override
