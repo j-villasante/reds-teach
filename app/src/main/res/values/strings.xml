@@ -22,4 +22,5 @@
     <string name="cancelar">Cancelar</string>
     <string name="agregar">Agregar</string>
     <string name="nueva">Nueva palabra</string>
+    <string name="image_description">image description</string>
 </resources>

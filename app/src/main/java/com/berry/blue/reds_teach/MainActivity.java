@@ -18,7 +18,7 @@ import android.view.MenuItem;
 
 import com.berry.blue.reds_teach.interfaces.activities.Main;
 import com.berry.blue.reds_teach.words.WordsFragment;
-import com.berry.blue.reds_teach.words.dialog.AddWordDialog;
+import com.berry.blue.reds_teach.words.dialog.WordsDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements Main{
 
         setSupportActionBar(toolbar);
 
-        fab.setOnClickListener((View view) -> AddWordDialog.instance().show(fragmentManager, "NewWordDialog"));
+        fab.setOnClickListener((View view) -> this.showDialog(WordsDialog.newInstance()));
 
         toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -68,6 +68,11 @@ public class MainActivity extends AppCompatActivity implements Main{
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void showDialog(WordsDialog dialog) {
+        dialog.show(fragmentManager, "NewWordDialog");
     }
 
     @Override
