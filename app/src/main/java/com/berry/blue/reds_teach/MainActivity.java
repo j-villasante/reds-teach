@@ -25,7 +25,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.berry.blue.reds_teach.interfaces.activities.Main;
+import com.berry.blue.reds_teach.nfcUtils.TagControl;
 import com.berry.blue.reds_teach.words.WordsFragment;
+import com.berry.blue.reds_teach.words.dialog.NfcDialog;
 import com.berry.blue.reds_teach.words.dialog.WordsDialog;
 
 import butterknife.BindView;
@@ -40,12 +42,15 @@ public class MainActivity extends AppCompatActivity implements Main{
 
     private ActionBarDrawerToggle toggle;
     private FragmentManager fragmentManager;
+    private DialogFragment currentDialog;
+    private TagControl tagControl;
 
     // NFC variables
     private NfcAdapter mNfcAdapter;
     private PendingIntent mPendingIntent;
     private IntentFilter[] mFilters;
     private String[][] mTechLists;
+    private boolean isWriteToNfcEnabled;
 
     private String TAG = getClass().getSimpleName();
 
@@ -70,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements Main{
         transaction.add(R.id.fragment_container, fragment);
         transaction.commit();
 
+        tagControl = TagControl.instance().setView(this);
         nfcInit();
     }
 
@@ -80,7 +86,20 @@ public class MainActivity extends AppCompatActivity implements Main{
     }
 
     @Override
+    protected void onPause() {
+        disableNfc();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        enableNfc();
+        super.onResume();
+    }
+
+    @Override
     protected void onNewIntent(Intent intent) {
+        if (isWriteToNfcEnabled) tagControl.writeKeyToTagFromIntent(intent);
         Log.i(TAG, "Discovered nfc");
     }
 
@@ -95,7 +114,14 @@ public class MainActivity extends AppCompatActivity implements Main{
 
     @Override
     public void showDialog(DialogFragment dialog) {
+        this.currentDialog = dialog;
         dialog.show(fragmentManager, "NewWordDialog");
+    }
+
+    @Override
+    public void dismissDialog() {
+        if (currentDialog != null && currentDialog.getDialog().isShowing())
+            this.currentDialog.dismiss();
     }
 
     @Override
@@ -105,13 +131,12 @@ public class MainActivity extends AppCompatActivity implements Main{
 
     @Override
     public void onDismissNfcDialog() {
-        if (mNfcAdapter != null) mNfcAdapter.disableForegroundDispatch(this);
+        isWriteToNfcEnabled = false;
     }
 
     @Override
     public void onOpenNfcDialog() {
-        if (mNfcAdapter != null) mNfcAdapter.enableForegroundDispatch(this, mPendingIntent, mFilters, mTechLists);
-        Log.i(TAG, "NFC read enabled");
+        isWriteToNfcEnabled = true;
     }
 
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -131,5 +156,15 @@ public class MainActivity extends AppCompatActivity implements Main{
             mFilters = new IntentFilter[] {ndef, };
             mTechLists = new String[][] { new String[] { MifareUltralight.class.getName() } };
         }
+    }
+
+    private void enableNfc() {
+        if (mNfcAdapter != null) mNfcAdapter.enableForegroundDispatch(this, mPendingIntent, mFilters, mTechLists);
+        Log.i(TAG, "NFC read enabled");
+    }
+
+    private void disableNfc() {
+        if (mNfcAdapter != null) mNfcAdapter.disableForegroundDispatch(this);
+        Log.i(TAG, "NFC read disabled");
     }
 }
