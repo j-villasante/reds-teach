@@ -2,8 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/nav_manage"
-        android:icon="@drawable/ic_menu_manage"
+        android:id="@+id/nav_words"
+        android:icon="@drawable/ic_list_black_24dp"
         android:title="@string/palabras" />
+
+    <item
+        android:id="@+id/nav_results"
+        android:icon="@drawable/ic_show_chart_black_24dp"
+        android:title="@string/resultados" />
 
 </menu>

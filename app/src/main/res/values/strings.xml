@@ -25,4 +25,5 @@
     <string name="image_description">image description</string>
     <string name="modificar_palabra">Modificar palabra</string>
     <string name="eliminar_palabra">Eliminar palabra</string>
+    <string name="resultados">Resultados</string>
 </resources>

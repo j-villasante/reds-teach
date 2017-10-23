@@ -18,13 +18,12 @@ public class SplashActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser user) {
         Intent intent;
-        if (user == null) {
+        if (user == null)
             intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-        } else {
+        else
             intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        }
+
+        startActivity(intent);
         this.finish();
     }
 }

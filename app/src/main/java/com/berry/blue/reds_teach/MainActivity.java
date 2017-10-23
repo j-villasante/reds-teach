@@ -12,6 +12,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -26,6 +27,7 @@ import android.view.MenuItem;
 
 import com.berry.blue.reds_teach.interfaces.activities.Main;
 import com.berry.blue.reds_teach.nfcUtils.TagControl;
+import com.berry.blue.reds_teach.results.ResultsFragment;
 import com.berry.blue.reds_teach.words.WordsFragment;
 import com.berry.blue.reds_teach.words.dialog.NfcDialog;
 import com.berry.blue.reds_teach.words.dialog.WordsDialog;
@@ -140,6 +142,23 @@ public class MainActivity extends AppCompatActivity implements Main{
     }
 
     public boolean onNavigationItemSelected(MenuItem item) {
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        Fragment fragment = null;
+        switch (item.getItemId()) {
+            case R.id.nav_words: {
+                fragment = new WordsFragment().setView(this);
+                break;
+            }
+            case R.id.nav_results: {
+                fragment = new ResultsFragment().setView(this);
+                break;
+            }
+        }
+
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.commit();
+        //item.setChecked(true);
+        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 

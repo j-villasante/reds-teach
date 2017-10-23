@@ -1,7 +1,5 @@
 package com.berry.blue.reds_teach.words;
 
-import android.util.Log;
-
 import com.berry.blue.reds_teach.RedDB;
 import com.berry.blue.reds_teach.fires.Word;
 import com.google.firebase.database.DataSnapshot;
@@ -24,10 +22,7 @@ public class WordsControl {
     }
 
     public WordsControl setView(WordsI.Fragment view) {
-        if (this.view == null)
-            this.view = view;
-        else
-            Log.e(getClass().getSimpleName(), "This view con only be set once.");
+        this.view = view;
         return this;
     }
 

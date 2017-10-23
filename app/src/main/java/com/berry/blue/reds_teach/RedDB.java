@@ -12,9 +12,7 @@ public class RedDB {
     }
 
     public static FirebaseDatabase instance() {
-        if (database == null) {
-            setup();
-        }
+        if (database == null) setup();
         return database;
     }
 }
