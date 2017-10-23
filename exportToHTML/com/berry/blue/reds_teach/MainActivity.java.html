@@ -1,0 +1,193 @@
+<html>
+<head>
+<title>MainActivity.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.ln { color: #606366; font-weight: normal; font-style: normal; }
+.s0 { color: rgb(204,120,50); }
+.s1 { color: rgb(169,183,198); }
+.s2 { color: rgb(128,128,128); }
+.s3 { color: rgb(106,135,89); }
+.s4 { color: rgb(104,151,187); }
+</style>
+</head>
+<BODY BGCOLOR="#2b2b2b">
+<TABLE CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<TR><TD><CENTER>
+<FONT FACE="Arial, Helvetica" COLOR="#000000">
+MainActivity.java</FONT>
+</center></TD></TR></TABLE>
+<pre>
+<span class="s0">package </span><span class="s1">com.berry.blue.reds_teach</span><span class="s0">;</span><span class="s1"> 
+ 
+</span><span class="s0">import </span><span class="s1">android.app.PendingIntent</span><span class="s0">;</span><span class="s1"> 
+</span><span class="s0">import </span><span class="s1">android.content.Intent</span><span class="s0">;</span><span class="s1"> 
+</span><span class="s0">import </span><span class="s1">android.content.IntentFilter</span><span class="s0">;</span><span class="s1"> 
+</span><span class="s0">import </span><span class="s1">android.nfc.NfcAdapter</span><span class="s0">;</span><span class="s1"> 
+</span><span class="s0">import </span><span class="s1">android.nfc.tech.MifareUltralight</span><span class="s0">;</span><span class="s1"> 
+</span><span class="s0">import </span><span class="s1">android.nfc.tech.NfcA</span><span class="s0">;</span><span class="s1"> 
+</span><span class="s0">import </span><span class="s1">android.os.Bundle</span><span class="s0">;</span><span class="s1"> 
+</span><span class="s0">import </span><span class="s1">android.support.annotation.Nullable</span><span class="s0">;</span><span class="s1"> 
+</span><span class="s0">import </span><span class="s1">android.support.design.widget.CoordinatorLayout</span><span class="s0">;</span><span class="s1"> 
+</span><span class="s0">import </span><span class="s1">android.support.design.widget.FloatingActionButton</span><span class="s0">;</span><span class="s1"> 
+</span><span class="s0">import </span><span class="s1">android.support.design.widget.Snackbar</span><span class="s0">;</span><span class="s1"> 
+</span><span class="s0">import </span><span class="s1">android.support.v4.app.DialogFragment</span><span class="s0">;</span><span class="s1"> 
+</span><span class="s0">import </span><span class="s1">android.support.v4.app.FragmentManager</span><span class="s0">;</span><span class="s1"> 
+</span><span class="s0">import </span><span class="s1">android.support.v4.app.FragmentTransaction</span><span class="s0">;</span><span class="s1"> 
+</span><span class="s0">import </span><span class="s1">android.util.Log</span><span class="s0">;</span><span class="s1"> 
+</span><span class="s0">import </span><span class="s1">android.view.View</span><span class="s0">;</span><span class="s1"> 
+</span><span class="s0">import </span><span class="s1">android.support.design.widget.NavigationView</span><span class="s0">;</span><span class="s1"> 
+</span><span class="s0">import </span><span class="s1">android.support.v4.view.GravityCompat</span><span class="s0">;</span><span class="s1"> 
+</span><span class="s0">import </span><span class="s1">android.support.v4.widget.DrawerLayout</span><span class="s0">;</span><span class="s1"> 
+</span><span class="s0">import </span><span class="s1">android.support.v7.app.ActionBarDrawerToggle</span><span class="s0">;</span><span class="s1"> 
+</span><span class="s0">import </span><span class="s1">android.support.v7.app.AppCompatActivity</span><span class="s0">;</span><span class="s1"> 
+</span><span class="s0">import </span><span class="s1">android.support.v7.widget.Toolbar</span><span class="s0">;</span><span class="s1"> 
+</span><span class="s0">import </span><span class="s1">android.view.MenuItem</span><span class="s0">;</span><span class="s1"> 
+ 
+</span><span class="s0">import </span><span class="s1">com.berry.blue.reds_teach.interfaces.activities.Main</span><span class="s0">;</span><span class="s1"> 
+</span><span class="s0">import </span><span class="s1">com.berry.blue.reds_teach.nfcUtils.TagControl</span><span class="s0">;</span><span class="s1"> 
+</span><span class="s0">import </span><span class="s1">com.berry.blue.reds_teach.words.WordsFragment</span><span class="s0">;</span><span class="s1"> 
+</span><span class="s0">import </span><span class="s1">com.berry.blue.reds_teach.words.dialog.NfcDialog</span><span class="s0">;</span><span class="s1"> 
+</span><span class="s0">import </span><span class="s1">com.berry.blue.reds_teach.words.dialog.WordsDialog</span><span class="s0">;</span><span class="s1"> 
+ 
+</span><span class="s0">import </span><span class="s1">butterknife.BindView</span><span class="s0">;</span><span class="s1"> 
+</span><span class="s0">import </span><span class="s1">butterknife.ButterKnife</span><span class="s0">;</span><span class="s1"> 
+ 
+</span><span class="s0">public class </span><span class="s1">MainActivity </span><span class="s0">extends </span><span class="s1">AppCompatActivity </span><span class="s0">implements </span><span class="s1">Main{ 
+    @BindView(R.id.drawer_layout) DrawerLayout drawer</span><span class="s0">;</span><span class="s1"> 
+    @BindView(R.id.toolbar) Toolbar toolbar</span><span class="s0">;</span><span class="s1"> 
+    @BindView(R.id.fab) FloatingActionButton fab</span><span class="s0">;</span><span class="s1"> 
+    @BindView(R.id.nav_view) NavigationView navigationView</span><span class="s0">;</span><span class="s1"> 
+    @BindView(R.id.coordinator_layout) CoordinatorLayout coordinatorLayout</span><span class="s0">;</span><span class="s1"> 
+ 
+    </span><span class="s0">private </span><span class="s1">ActionBarDrawerToggle toggle</span><span class="s0">;</span><span class="s1"> 
+    </span><span class="s0">private </span><span class="s1">FragmentManager fragmentManager</span><span class="s0">;</span><span class="s1"> 
+    </span><span class="s0">private </span><span class="s1">DialogFragment currentDialog</span><span class="s0">;</span><span class="s1"> 
+    </span><span class="s0">private </span><span class="s1">TagControl tagControl</span><span class="s0">;</span><span class="s1"> 
+ 
+    </span><span class="s2">// NFC variables</span><span class="s1"> 
+    </span><span class="s0">private </span><span class="s1">NfcAdapter mNfcAdapter</span><span class="s0">;</span><span class="s1"> 
+    </span><span class="s0">private </span><span class="s1">PendingIntent mPendingIntent</span><span class="s0">;</span><span class="s1"> 
+    </span><span class="s0">private </span><span class="s1">IntentFilter[] mFilters</span><span class="s0">;</span><span class="s1"> 
+    </span><span class="s0">private </span><span class="s1">String[][] mTechLists</span><span class="s0">;</span><span class="s1"> 
+    </span><span class="s0">private boolean </span><span class="s1">isWriteToNfcEnabled</span><span class="s0">;</span><span class="s1"> 
+ 
+    </span><span class="s0">private </span><span class="s1">String TAG = getClass().getSimpleName()</span><span class="s0">;</span><span class="s1"> 
+ 
+    @Override 
+    </span><span class="s0">protected void </span><span class="s1">onCreate(Bundle savedInstanceState) { 
+        </span><span class="s0">super</span><span class="s1">.onCreate(savedInstanceState)</span><span class="s0">;</span><span class="s1"> 
+        setContentView(R.layout.activity_main)</span><span class="s0">;</span><span class="s1"> 
+        ButterKnife.bind(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+ 
+        setSupportActionBar(toolbar)</span><span class="s0">;</span><span class="s1"> 
+ 
+        fab.setOnClickListener((View view) -&gt; </span><span class="s0">this</span><span class="s1">.showDialog(WordsDialog.newInstance()))</span><span class="s0">;</span><span class="s1"> 
+ 
+        toggle = </span><span class="s0">new </span><span class="s1">ActionBarDrawerToggle(</span><span class="s0">this, </span><span class="s1">drawer</span><span class="s0">, </span><span class="s1">toolbar</span><span class="s0">, </span><span class="s1">R.string.navigation_drawer_open</span><span class="s0">, </span><span class="s1">R.string.navigation_drawer_close)</span><span class="s0">;</span><span class="s1"> 
+        drawer.addDrawerListener(toggle)</span><span class="s0">;</span><span class="s1"> 
+ 
+        navigationView.setNavigationItemSelectedListener(</span><span class="s0">this</span><span class="s1">::onNavigationItemSelected)</span><span class="s0">;</span><span class="s1"> 
+ 
+        </span><span class="s0">this</span><span class="s1">.fragmentManager = getSupportFragmentManager()</span><span class="s0">;</span><span class="s1"> 
+        FragmentTransaction transaction = fragmentManager.beginTransaction()</span><span class="s0">;</span><span class="s1"> 
+        WordsFragment fragment = </span><span class="s0">new </span><span class="s1">WordsFragment().setView(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+        transaction.add(R.id.fragment_container</span><span class="s0">, </span><span class="s1">fragment)</span><span class="s0">;</span><span class="s1"> 
+        transaction.commit()</span><span class="s0">;</span><span class="s1"> 
+ 
+        tagControl = TagControl.instance().setView(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+        nfcInit()</span><span class="s0">;</span><span class="s1"> 
+    } 
+ 
+    @Override 
+    </span><span class="s0">protected void </span><span class="s1">onPostCreate(@Nullable Bundle savedInstanceState) { 
+        </span><span class="s0">super</span><span class="s1">.onPostCreate(savedInstanceState)</span><span class="s0">;</span><span class="s1"> 
+        toggle.syncState()</span><span class="s0">;</span><span class="s1"> 
+    } 
+ 
+    @Override 
+    </span><span class="s0">protected void </span><span class="s1">onPause() { 
+        disableNfc()</span><span class="s0">;</span><span class="s1"> 
+        </span><span class="s0">super</span><span class="s1">.onPause()</span><span class="s0">;</span><span class="s1"> 
+    } 
+ 
+    @Override 
+    </span><span class="s0">protected void </span><span class="s1">onResume() { 
+        enableNfc()</span><span class="s0">;</span><span class="s1"> 
+        </span><span class="s0">super</span><span class="s1">.onResume()</span><span class="s0">;</span><span class="s1"> 
+    } 
+ 
+    @Override 
+    </span><span class="s0">protected void </span><span class="s1">onNewIntent(Intent intent) { 
+        </span><span class="s0">if </span><span class="s1">(isWriteToNfcEnabled) tagControl.writeKeyToTagFromIntent(intent)</span><span class="s0">;</span><span class="s1"> 
+        Log.i(TAG</span><span class="s0">, </span><span class="s3">&quot;Discovered nfc&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+    } 
+ 
+    @Override 
+    </span><span class="s0">public void </span><span class="s1">onBackPressed() { 
+        </span><span class="s0">if </span><span class="s1">(drawer.isDrawerOpen(GravityCompat.START)) { 
+            drawer.closeDrawer(GravityCompat.START)</span><span class="s0">;</span><span class="s1"> 
+        } </span><span class="s0">else </span><span class="s1">{ 
+            </span><span class="s0">super</span><span class="s1">.onBackPressed()</span><span class="s0">;</span><span class="s1"> 
+        } 
+    } 
+ 
+    @Override 
+    </span><span class="s0">public void </span><span class="s1">showDialog(DialogFragment dialog) { 
+        </span><span class="s0">this</span><span class="s1">.currentDialog = dialog</span><span class="s0">;</span><span class="s1"> 
+        dialog.show(fragmentManager</span><span class="s0">, </span><span class="s3">&quot;NewWordDialog&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+    } 
+ 
+    @Override 
+    </span><span class="s0">public void </span><span class="s1">dismissDialog() { 
+        </span><span class="s0">if </span><span class="s1">(currentDialog != </span><span class="s0">null </span><span class="s1">&amp;&amp; currentDialog.getDialog().isShowing()) 
+            </span><span class="s0">this</span><span class="s1">.currentDialog.dismiss()</span><span class="s0">;</span><span class="s1"> 
+    } 
+ 
+    @Override 
+    </span><span class="s0">public void </span><span class="s1">showMessage(String message) { 
+        Snackbar.make(coordinatorLayout</span><span class="s0">, </span><span class="s1">message</span><span class="s0">, </span><span class="s1">Snackbar.LENGTH_LONG).show()</span><span class="s0">;</span><span class="s1"> 
+    } 
+ 
+    @Override 
+    </span><span class="s0">public void </span><span class="s1">onDismissNfcDialog() { 
+        isWriteToNfcEnabled = </span><span class="s0">false;</span><span class="s1"> 
+    } 
+ 
+    @Override 
+    </span><span class="s0">public void </span><span class="s1">onOpenNfcDialog() { 
+        isWriteToNfcEnabled = </span><span class="s0">true;</span><span class="s1"> 
+    } 
+ 
+    </span><span class="s0">public boolean </span><span class="s1">onNavigationItemSelected(MenuItem item) { 
+        </span><span class="s0">return true;</span><span class="s1"> 
+    } 
+ 
+    </span><span class="s0">private void </span><span class="s1">nfcInit() { 
+        mNfcAdapter = NfcAdapter.getDefaultAdapter(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+        </span><span class="s0">if </span><span class="s1">(mNfcAdapter != </span><span class="s0">null</span><span class="s1">) { 
+            mPendingIntent = PendingIntent.getActivity(</span><span class="s0">this, </span><span class="s4">0</span><span class="s0">, new </span><span class="s1">Intent(</span><span class="s0">this, </span><span class="s1">getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)</span><span class="s0">, </span><span class="s4">0</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+            IntentFilter ndef = </span><span class="s0">new </span><span class="s1">IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED)</span><span class="s0">;</span><span class="s1"> 
+            </span><span class="s0">try </span><span class="s1">{ 
+                ndef.addDataType(</span><span class="s3">&quot;*/*&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+            } </span><span class="s0">catch </span><span class="s1">(IntentFilter.MalformedMimeTypeException e) { 
+                </span><span class="s0">throw new </span><span class="s1">RuntimeException(</span><span class="s3">&quot;fail&quot;</span><span class="s0">, </span><span class="s1">e)</span><span class="s0">;</span><span class="s1"> 
+            } 
+            mFilters = </span><span class="s0">new </span><span class="s1">IntentFilter[] {ndef</span><span class="s0">, </span><span class="s1">}</span><span class="s0">;</span><span class="s1"> 
+            mTechLists = </span><span class="s0">new </span><span class="s1">String[][] { </span><span class="s0">new </span><span class="s1">String[] { MifareUltralight.</span><span class="s0">class</span><span class="s1">.getName() } }</span><span class="s0">;</span><span class="s1"> 
+        } 
+    } 
+ 
+    </span><span class="s0">private void </span><span class="s1">enableNfc() { 
+        </span><span class="s0">if </span><span class="s1">(mNfcAdapter != </span><span class="s0">null</span><span class="s1">) mNfcAdapter.enableForegroundDispatch(</span><span class="s0">this, </span><span class="s1">mPendingIntent</span><span class="s0">, </span><span class="s1">mFilters</span><span class="s0">, </span><span class="s1">mTechLists)</span><span class="s0">;</span><span class="s1"> 
+        Log.i(TAG</span><span class="s0">, </span><span class="s3">&quot;NFC read enabled&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+    } 
+ 
+    </span><span class="s0">private void </span><span class="s1">disableNfc() { 
+        </span><span class="s0">if </span><span class="s1">(mNfcAdapter != </span><span class="s0">null</span><span class="s1">) mNfcAdapter.disableForegroundDispatch(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+        Log.i(TAG</span><span class="s0">, </span><span class="s3">&quot;NFC read disabled&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+    } 
+} 
+</span></pre>
+</body>
+</html>
