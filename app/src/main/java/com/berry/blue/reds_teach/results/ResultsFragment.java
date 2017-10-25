@@ -13,13 +13,20 @@ import android.view.ViewGroup;
 
 import com.berry.blue.reds_teach.R;
 import com.berry.blue.reds_teach.fires.Game;
+import com.berry.blue.reds_teach.fires.Guess;
 import com.berry.blue.reds_teach.interfaces.activities.Main;
+import com.berry.blue.reds_teach.results.dialogs.DetailDialog;
 
 import java.util.List;
 
 public class ResultsFragment extends Fragment implements Results.Fragment, Results.AdapterView{
     private RecyclerView recyclerView;
     private Main view;
+    private ResultsControl resultsControl;
+
+    public ResultsFragment() {
+        this.resultsControl = ResultsControl.instance();
+    }
 
     @Nullable
     @Override
@@ -30,7 +37,7 @@ public class ResultsFragment extends Fragment implements Results.Fragment, Resul
         this.recyclerView.setLayoutManager(layoutManager);
         this.recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), layoutManager.getOrientation()));
 
-        ResultsControl.instance().getResultsGames(this);
+        resultsControl.getResultsGames(this);
 
         return rootView;
     }
@@ -51,12 +58,14 @@ public class ResultsFragment extends Fragment implements Results.Fragment, Resul
     }
 
     @Override
-    public void showDetail(String key) {
-        Log.e(getClass().getSimpleName(), key);
+    public void showDetail(Game game, List<Guess> guesses) {
+        Log.e(getClass().getSimpleName(), String.valueOf(guesses.size()));
+        DetailDialog dialog = new DetailDialog().setDetails(game, guesses);
+        view.showDialog(dialog);
     }
 
     @Override
     public void getDetail(String key) {
-        ResultsControl.instance();
+        resultsControl.getGameDetail(key, this);
     }
 }

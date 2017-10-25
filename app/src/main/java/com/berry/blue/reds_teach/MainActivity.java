@@ -16,6 +16,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -88,6 +89,21 @@ public class MainActivity extends AppCompatActivity implements Main{
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.menu_share) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onPause() {
         disableNfc();
         super.onPause();
@@ -147,10 +163,12 @@ public class MainActivity extends AppCompatActivity implements Main{
         switch (item.getItemId()) {
             case R.id.nav_words: {
                 fragment = new WordsFragment().setView(this);
+                fab.setVisibility(View.VISIBLE);
                 break;
             }
             case R.id.nav_results: {
                 fragment = new ResultsFragment().setView(this);
+                fab.setVisibility(View.INVISIBLE);
                 break;
             }
         }

@@ -26,4 +26,5 @@
     <string name="modificar_palabra">Modificar palabra</string>
     <string name="eliminar_palabra">Eliminar palabra</string>
     <string name="resultados">Resultados</string>
+    <string name="compartir">Compartir</string>
 </resources>

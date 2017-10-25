@@ -1,5 +1,7 @@
 package com.berry.blue.reds_teach.results;
 
+import android.util.Log;
+
 import com.berry.blue.reds_teach.RedDB;
 import com.berry.blue.reds_teach.fires.Game;
 import com.berry.blue.reds_teach.fires.Guess;
@@ -54,13 +56,23 @@ class ResultsControl {
                 DataSnapshot guessesSnap = dataSnapshot.child("guesses");
 
                 for (DataSnapshot guessSnap : guessesSnap.getChildren()) {
-
+                    Guess guess = new Guess((String) guessSnap.child("word").getValue());
+                    int i = 0;
+                    DataSnapshot triSnap = guessSnap.child("0");
+                    while (triSnap.exists()) {
+                        DataSnapshot elapsedSnap = triSnap.child("elapsedTime");
+                        if (elapsedSnap.exists()) guess.addTry((long) elapsedSnap.getValue());
+                        i++;
+                        triSnap = guessSnap.child(String.valueOf(i));
+                    }
+                    guesses.add(guess);
                 }
+                view.showDetail(game, guesses);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                view.showMessage(databaseError.getMessage());
             }
         });
     }
