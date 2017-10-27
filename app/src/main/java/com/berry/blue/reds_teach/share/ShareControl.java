@@ -1,5 +1,7 @@
 package com.berry.blue.reds_teach.share;
 
+import android.util.Log;
+
 import com.berry.blue.reds_teach.RedDB;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -10,7 +12,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-class ShareControl {
+public class ShareControl {
     private static ShareControl instance;
 
     private DatabaseReference reference;
@@ -20,17 +22,21 @@ class ShareControl {
         this.reference = RedDB.instance().getReference("games");
     }
 
-    static ShareControl instance() {
+    public static ShareControl instance() {
         if (instance == null) instance = new ShareControl();
         return instance;
     }
 
-    ShareControl setView(ShareI.ExporterI exporter) {
+    public ShareControl setView(ShareI.ExporterI exporter) {
         this.view = exporter;
         return this;
     }
 
-    void getStringifiedGames() {
+    public void getStringedGames() {
+        if (this.view == null) {
+            Log.e(getClass().getSimpleName(), "View is no set!");
+            return;
+        }
         this.reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -49,7 +55,6 @@ class ShareControl {
         data.add(new String[]{"prueba", "fecha", "palabra", "numero", "cantidad de intentos", "intento 1", "intento 2", "intento 3", "intento 4", "intento 5"});
         int i = 1;
         for (DataSnapshot gameSnap : dataSnapshot.getChildren()) {
-
             int j = 1;
             for (DataSnapshot guessSnap : gameSnap.child("guesses").getChildren()) {
                 String[] game = new String[10];
@@ -63,7 +68,7 @@ class ShareControl {
                     DataSnapshot triSnap = guessSnap.child(String.valueOf(l));
                     if (triSnap.exists()) {
                         DataSnapshot elapsedSnap = triSnap.child("elapsedTime");
-                        if (elapsedSnap.exists()) game[k] = String.valueOf(elapsedSnap.getValue());
+                        if (elapsedSnap.exists()) game[k + 5] = String.valueOf(elapsedSnap.getValue());
                         k++;
                     }
                 }

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NfcAdapter;
 import android.nfc.tech.MifareUltralight;
-import android.nfc.tech.NfcA;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -26,17 +25,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.berry.blue.reds_teach.interfaces.activities.ExporterView;
 import com.berry.blue.reds_teach.interfaces.activities.Main;
 import com.berry.blue.reds_teach.nfcUtils.TagControl;
 import com.berry.blue.reds_teach.results.ResultsFragment;
+import com.berry.blue.reds_teach.share.Exporter;
+import com.berry.blue.reds_teach.share.ShareControl;
 import com.berry.blue.reds_teach.words.WordsFragment;
-import com.berry.blue.reds_teach.words.dialog.NfcDialog;
 import com.berry.blue.reds_teach.words.dialog.WordsDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements Main{
+public class MainActivity extends AppCompatActivity implements Main, ExporterView {
     @BindView(R.id.drawer_layout) DrawerLayout drawer;
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.fab) FloatingActionButton fab;
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements Main{
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        toggle.syncState();
+        //toggle.syncState();
     }
 
     @Override
@@ -98,6 +99,9 @@ public class MainActivity extends AppCompatActivity implements Main{
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.menu_share) {
+            Exporter exporter = new Exporter(this, getApplicationContext());
+            ShareControl control = ShareControl.instance().setView(exporter);
+            control.getStringedGames();
             return true;
         }
         return super.onOptionsItemSelected(item);
