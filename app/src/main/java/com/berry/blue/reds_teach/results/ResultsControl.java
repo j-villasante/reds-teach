@@ -1,7 +1,5 @@
 package com.berry.blue.reds_teach.results;
 
-import android.util.Log;
-
 import com.berry.blue.reds_teach.RedDB;
 import com.berry.blue.reds_teach.fires.Game;
 import com.berry.blue.reds_teach.fires.Guess;
@@ -11,6 +9,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 class ResultsControl {
@@ -37,6 +36,7 @@ class ResultsControl {
                     Game game = snap.getValue(Game.class);
                     if (game != null) games.add(game.setKey(snap.getKey()));
                 }
+                Collections.reverse(games);
                 view.onDataObtained(games);
             }
 

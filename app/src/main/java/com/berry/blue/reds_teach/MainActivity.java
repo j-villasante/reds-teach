@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements Main, ExporterVie
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        //toggle.syncState();
+        toggle.syncState();
     }
 
     @Override
