@@ -7,6 +7,11 @@
         android:title="@string/palabras" />
 
     <item
+        android:id="@+id/nav_option"
+        android:icon="@drawable/ic_settings_black_24dp"
+        android:title="@string/opciones" />
+
+    <item
         android:id="@+id/nav_results"
         android:icon="@drawable/ic_show_chart_black_24dp"
         android:title="@string/resultados" />

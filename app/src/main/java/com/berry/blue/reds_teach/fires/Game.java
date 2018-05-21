@@ -1,43 +1,27 @@
 package com.berry.blue.reds_teach.fires;
 
-import android.nfc.FormatException;
-
-import com.google.firebase.database.IgnoreExtraProperties;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
 public class Game {
     public String key;
     public String date;
-    public int type;
-    private List<Guess> guesses;
-
-    private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX", Locale.ENGLISH);
+    public long type;
 
     public Game() {}
 
-    private Date getDate() {
-        Date date = null;
-        try {
-            date = format.parse(this.date);
-        }
-        catch (ParseException e) {
-            e.printStackTrace();
-        }
+    public String getSimpleDate() {
         return date;
     }
 
-    public String getSimpleDate() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm a", Locale.ENGLISH);
-        return dateFormat.format(getDate());
+    public void setKey(String key) {
+        this.key = key;
     }
 
-    public Game setKey(String key) {
-        this.key = key;
-        return this;
+    public String getType() {
+        if (this.type == 1) {
+            return "Buscar";
+        } else if (this.type == 2) {
+            return "Aprender";
+        } else {
+            return "Unknown";
+        }
     }
 }

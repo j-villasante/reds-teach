@@ -29,8 +29,7 @@ import com.berry.blue.reds_teach.interfaces.activities.ExporterView;
 import com.berry.blue.reds_teach.interfaces.activities.Main;
 import com.berry.blue.reds_teach.nfcUtils.TagControl;
 import com.berry.blue.reds_teach.results.ResultsFragment;
-import com.berry.blue.reds_teach.share.Exporter;
-import com.berry.blue.reds_teach.share.ShareControl;
+import com.berry.blue.reds_teach.settings.SettingsFragment;
 import com.berry.blue.reds_teach.words.WordsFragment;
 import com.berry.blue.reds_teach.words.dialog.WordsDialog;
 
@@ -40,7 +39,6 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements Main, ExporterView {
     @BindView(R.id.drawer_layout) DrawerLayout drawer;
     @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.fab) FloatingActionButton fab;
     @BindView(R.id.nav_view) NavigationView navigationView;
     @BindView(R.id.coordinator_layout) CoordinatorLayout coordinatorLayout;
 
@@ -48,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements Main, ExporterVie
     private FragmentManager fragmentManager;
     private DialogFragment currentDialog;
     private TagControl tagControl;
+
+    private Menu optionsMenu;
 
     // NFC variables
     private NfcAdapter mNfcAdapter;
@@ -65,8 +65,6 @@ public class MainActivity extends AppCompatActivity implements Main, ExporterVie
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-
-        fab.setOnClickListener((View view) -> this.showDialog(WordsDialog.newInstance()));
 
         toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -91,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements Main, ExporterVie
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.optionsMenu = menu;
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -98,10 +97,8 @@ public class MainActivity extends AppCompatActivity implements Main, ExporterVie
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.menu_share) {
-            Exporter exporter = new Exporter(this, getApplicationContext());
-            ShareControl control = ShareControl.instance().setView(exporter);
-            control.getStringedGames();
+        if (id == R.id.menu_add) {
+            this.showDialog(WordsDialog.newInstance());
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -167,12 +164,17 @@ public class MainActivity extends AppCompatActivity implements Main, ExporterVie
         switch (item.getItemId()) {
             case R.id.nav_words: {
                 fragment = new WordsFragment().setView(this);
-                fab.setVisibility(View.VISIBLE);
+                optionsMenu.findItem(R.id.menu_add).setVisible(true);
+                break;
+            }
+            case R.id.nav_option: {
+                fragment = new SettingsFragment().setView(this);
+                optionsMenu.findItem(R.id.menu_add).setVisible(false);
                 break;
             }
             case R.id.nav_results: {
                 fragment = new ResultsFragment().setView(this);
-                fab.setVisibility(View.INVISIBLE);
+                optionsMenu.findItem(R.id.menu_add).setVisible(false);
                 break;
             }
         }

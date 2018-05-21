@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 public class WordAdapter extends RecyclerView.Adapter<WordAdapter.ViewHolder>{
     static class ViewHolder extends RecyclerView.ViewHolder{
         @BindView(R.id.info_text) TextView tviName;
+        @BindView(R.id.words_category) TextView tviCategory;
         @BindView(R.id.words_nfc_but) ImageView nfcBut;
         @BindView(R.id.words_edit_but) ImageView editBut;
         @BindView(R.id.words_delete_but) ImageView deleteBut;
@@ -44,9 +45,14 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.ViewHolder>{
     public void onBindViewHolder(ViewHolder holder, int position) {
         Word word = words.get(position);
         holder.tviName.setText(word.name);
+        if (word.category == null)
+            holder.tviCategory.setText("---");
+        else
+            holder.tviCategory.setText(word.category);
         holder.editBut.setOnClickListener(view -> fragment.onEditItemClick(word));
         holder.deleteBut.setOnClickListener(view -> fragment.onDeleteItemClick(word));
         holder.nfcBut.setOnClickListener(view -> fragment.onNfcItemClick(word.key));
+        holder.tviCategory.setOnClickListener(view -> fragment.onChangeCategoryClick(word.key));
     }
 
     @Override

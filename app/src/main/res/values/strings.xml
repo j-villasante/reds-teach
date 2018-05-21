@@ -27,4 +27,10 @@
     <string name="eliminar_palabra">Eliminar palabra</string>
     <string name="resultados">Resultados</string>
     <string name="compartir">Compartir</string>
+    <string name="opciones">Opciones</string>
+    <string name="cantidad_de_ejercicios">Cantidad de ejercicios</string>
+    <string name="categoria_actual">Categoria actual</string>
+    <string name="agregar_categoria">Agregar categoria</string>
+    <string name="eliminar_categoria">Eliminar categoria</string>
+    <string name="guardar">Guardar</string>
 </resources>

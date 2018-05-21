@@ -4,6 +4,7 @@ import com.google.firebase.database.Exclude;
 
 public class Word {
     public String name;
+    public String category;
     @Exclude
     public String key;
 

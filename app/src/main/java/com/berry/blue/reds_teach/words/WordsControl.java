@@ -31,7 +31,7 @@ public class WordsControl {
     }
 
     void getWords() {
-        this.reference.addValueEventListener(new ValueEventListener() {
+        this.reference.orderByChild("category").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterable<DataSnapshot> wordSnaps = dataSnapshot.getChildren();
@@ -42,6 +42,25 @@ public class WordsControl {
                     words.add(word);
                 }
                 view.onDataObtained(words);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                view.showMessage(databaseError.getMessage());
+            }
+        });
+    }
+
+    void getCategories() {
+        RedDB.instance().getReference("categories")
+                .addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<String> categories = new ArrayList<>();
+                for (DataSnapshot snap: dataSnapshot.getChildren()) {
+                   categories.add(snap.getValue(String.class));
+                }
+                view.onCategoryData(categories);
             }
 
             @Override
@@ -71,5 +90,13 @@ public class WordsControl {
                 .child(key)
                 .removeValue()
                 .addOnCompleteListener(task -> view.showMessage("La palabra se eliminó correctamente."));
+    }
+
+    public void modifyCategory(String key, String category) {
+        this.reference
+                .child(key)
+                .child("category")
+                .setValue(category)
+                .addOnCompleteListener(task -> view.showMessage("La categoría se modificó correctamente."));
     }
 }

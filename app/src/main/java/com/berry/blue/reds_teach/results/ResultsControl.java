@@ -34,7 +34,8 @@ class ResultsControl {
                 List<Game> games = new ArrayList<>();
                 for (DataSnapshot snap : snaps) {
                     Game game = snap.getValue(Game.class);
-                    if (game != null) games.add(game.setKey(snap.getKey()));
+                    game.setKey(snap.getKey());
+                    if (game != null) games.add(game);
                 }
                 Collections.reverse(games);
                 view.onDataObtained(games);
